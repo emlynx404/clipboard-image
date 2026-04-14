@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Check if the user's input contains a file path ending in .png, .jpg, .jpeg, .gif, .webp, or .bmp (case-insensitive). The path may be absolute or relative, and may be surrounded by whitespace or quotes. If you find an image file path, respond with: {\"decision\": \"approve\", \"reason\": \"Image file path detected\", \"systemMessage\": \"The user's message contains an image file path. Use the Read tool to read the image file, then confirm to the user: 已接收图片：<file_path>. Do not analyze the image until the user asks.\"}. If you do NOT find any image file path, respond with: {\"decision\": \"approve\", \"reason\": \"No image path detected\"}."
+          }
+        ]
+      }
+    ]
+  }
+}
