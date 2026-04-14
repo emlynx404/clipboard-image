@@ -1,40 +1,24 @@
 #!/bin/bash
-# Extracts image from macOS clipboard and saves as PNG.
+# Platform dispatcher for clipboard image extraction.
+# Detects OS and delegates to the appropriate platform script.
 # Usage: grab-image.sh [save_directory]
-# Output: JSON to stdout — {"success":true,"path":"..."} or {"success":false,"error":"..."}
+# Output: JSON to stdout
 
 SAVE_DIR="${1:-/tmp}"
-FILENAME="claude-paste-$(date +%Y%m%d-%H%M%S).png"
-FILEPATH="${SAVE_DIR}/${FILENAME}"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Check if clipboard contains image data
-has_image=$(osascript -e 'clipboard info' 2>/dev/null | grep -c 'PNGf\|TIFF')
-
-if [ "$has_image" -eq 0 ]; then
-  echo '{"success":false,"error":"剪贴板中没有图片"}'
-  exit 1
-fi
-
-# Ensure save directory exists
-mkdir -p "$SAVE_DIR"
-
-# Export clipboard image as PNG
-osascript -e "
-  set imgData to the clipboard as «class PNGf»
-  set filePath to POSIX file \"${FILEPATH}\"
-  set fileRef to open for access filePath with write permission
-  write imgData to fileRef
-  close access fileRef
-" 2>/dev/null
-
-if [ -f "$FILEPATH" ]; then
-  # Resize if wider than 1920px to reduce file size
-  width=$(sips -g pixelWidth "$FILEPATH" 2>/dev/null | tail -1 | awk '{print $2}')
-  if [ -n "$width" ] && [ "$width" -gt 1920 ]; then
-    sips --resampleWidth 1920 "$FILEPATH" >/dev/null 2>&1
-  fi
-  echo "{\"success\":true,\"path\":\"${FILEPATH}\"}"
-else
-  echo '{"success":false,"error":"图片导出失败"}'
-  exit 1
-fi
+case "$(uname -s)" in
+  Darwin)
+    bash "$SCRIPT_DIR/grab-image-darwin.sh" "$SAVE_DIR"
+    ;;
+  Linux)
+    bash "$SCRIPT_DIR/grab-image-linux.sh" "$SAVE_DIR"
+    ;;
+  MINGW*|MSYS*|CYGWIN*)
+    powershell.exe -ExecutionPolicy Bypass -File "$SCRIPT_DIR/grab-image-win.ps1" "$SAVE_DIR"
+    ;;
+  *)
+    echo "{\"success\":false,\"error\":\"Unsupported platform: $(uname -s)\"}"
+    exit 1
+    ;;
+esac
