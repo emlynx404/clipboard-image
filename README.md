@@ -1,37 +1,45 @@
 # clipboard-image
 
-A Claude Code plugin for pasting clipboard images and dragging image files into the CLI.
+A Claude Code plugin for pasting clipboard images into conversations.
 
 ## Install
 
 ```bash
-/install-plugin /path/to/clipboard-image
+claude --plugin-dir /path/to/clipboard-image
 ```
 
 ## Usage
 
-1. Copy an image (screenshot, browser image, etc.)
-2. In Claude Code, type:
+Copy an image to your clipboard (screenshot, browser image, etc.), then in Claude Code:
+
+**Paste with a prompt:**
 
 ```
-/paste 这张图里的代码有什么bug？
+/paste What bugs do you see in this screenshot?
 ```
 
-Just paste without a prompt:
+**Paste without a prompt:**
 
 ```
 /paste
 ```
 
-Save to a specific directory:
+**Save to a specific directory:**
 
 ```
-/paste --save ./screenshots 帮我分析这个架构图
+/paste --save ./screenshots Analyze this architecture diagram
 ```
+
+## Features
+
+- Extract images directly from macOS clipboard
+- Ask questions about images in a single interaction
+- Auto-resize large screenshots (>1920px) for faster processing
+- Save images to a custom directory with `--save`
 
 ## Platform Support
 
-- **macOS** — supported (uses osascript)
+- **macOS** — supported (uses osascript + sips)
 - **Linux** — not yet supported
 - **Windows** — not yet supported
 
@@ -39,4 +47,3 @@ Save to a specific directory:
 
 - macOS
 - Claude Code CLI
-- No external dependencies
