@@ -10,24 +10,24 @@ A Claude Code plugin for pasting clipboard images and dragging image files into 
 
 ## Usage
 
-### Paste from clipboard
-
 1. Copy an image (screenshot, browser image, etc.)
 2. In Claude Code, type:
+
+```
+/paste 这张图里的代码有什么bug？
+```
+
+Just paste without a prompt:
 
 ```
 /paste
 ```
 
-To save to a specific directory:
+Save to a specific directory:
 
 ```
-/paste --save ./screenshots
+/paste --save ./screenshots 帮我分析这个架构图
 ```
-
-### Drag and drop
-
-Drag any image file (.png, .jpg, .gif, .webp, .bmp) into the terminal. The plugin automatically detects and reads it.
 
 ## Platform Support
 
