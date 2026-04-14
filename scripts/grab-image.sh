@@ -1,0 +1,35 @@
+#!/bin/bash
+# Extracts image from macOS clipboard and saves as PNG.
+# Usage: grab-image.sh [save_directory]
+# Output: JSON to stdout — {"success":true,"path":"..."} or {"success":false,"error":"..."}
+
+SAVE_DIR="${1:-/tmp}"
+FILENAME="claude-paste-$(date +%Y%m%d-%H%M%S).png"
+FILEPATH="${SAVE_DIR}/${FILENAME}"
+
+# Check if clipboard contains image data
+has_image=$(osascript -e 'clipboard info' 2>/dev/null | grep -c 'PNGf\|TIFF')
+
+if [ "$has_image" -eq 0 ]; then
+  echo '{"success":false,"error":"剪贴板中没有图片"}'
+  exit 1
+fi
+
+# Ensure save directory exists
+mkdir -p "$SAVE_DIR"
+
+# Export clipboard image as PNG
+osascript -e "
+  set imgData to the clipboard as «class PNGf»
+  set filePath to POSIX file \"${FILEPATH}\"
+  set fileRef to open for access filePath with write permission
+  write imgData to fileRef
+  close access fileRef
+" 2>/dev/null
+
+if [ -f "$FILEPATH" ]; then
+  echo "{\"success\":true,\"path\":\"${FILEPATH}\"}"
+else
+  echo '{"success":false,"error":"图片导出失败"}'
+  exit 1
+fi
