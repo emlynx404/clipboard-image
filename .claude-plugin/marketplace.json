@@ -1,0 +1,20 @@
+{
+  "name": "clipboard-image",
+  "owner": {
+    "name": "emcow"
+  },
+  "metadata": {
+    "description": "Paste images from clipboard into Claude Code CLI"
+  },
+  "plugins": [
+    {
+      "name": "clipboard-image",
+      "source": ".",
+      "description": "Paste images from clipboard or drag image files into Claude Code CLI",
+      "version": "0.1.0",
+      "author": {
+        "name": "emcow"
+      }
+    }
+  ]
+}
