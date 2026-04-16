@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "clipboard-image",
-      "source": ".",
+      "source": "./",
       "description": "Paste images from clipboard or drag image files into Claude Code CLI",
       "version": "0.1.0",
       "author": {
